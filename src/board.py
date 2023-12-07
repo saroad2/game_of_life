@@ -33,6 +33,14 @@ class Board:
             self.calculate_next_generation()
         return self._cache_next
 
+    def copy(self) -> "Board":
+        cache_next = None if self._cache_next is None else self._cache_next.copy()
+        return Board(
+            live_cells=set(self.live_cells),
+            _cache_next=cache_next,
+            _cache_score=self._cache_score
+        )
+
     def reset(self):
         self.live_cells.clear()
 
