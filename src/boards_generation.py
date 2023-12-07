@@ -39,6 +39,7 @@ class BoardsGeneration:
 
     def pick(self):
         weights = np.array(self.scores)
+        weights -= np.min(weights)
         weights /= np.sum(weights)
         index = np.random.choice(len(self), p=weights)
         return self.boards[index].copy()
