@@ -1,4 +1,5 @@
 from dataclasses import dataclass, field
+from typing import Optional
 
 import numpy as np
 
@@ -8,6 +9,8 @@ from constants import MAX_GENERATIONS, GENERATION_WEIGHT_DECAY
 @dataclass
 class Board:
     live_cells: set[tuple[int, int]] = field(default_factory=set)
+    _cache_next: Optional["Board"] = field(default=None)
+    _cache_score: Optional[float] = field(default=None)
 
     @classmethod
     def random(cls, n: int) -> "Board":
@@ -20,31 +23,27 @@ class Board:
 
     @property
     def score(self) -> float:
-        board = self
-        cells_count = []
-        for _ in range(MAX_GENERATIONS):
-            cells_count.append(len(board.live_cells))
-            board = board.next_generation()
+        if self._cache_score is None:
+            self.calculate_score()
+        return self._cache_score
 
-        cells_count = np.array(cells_count)
-        cells_count = np.flip(cells_count)
-        weights = np.array(
-            [
-                np.power(GENERATION_WEIGHT_DECAY, i)
-                for i in range(MAX_GENERATIONS)
-            ]
-        )
-        return float(np.sum(cells_count * weights) / np.sum(weights))
+    @property
+    def next_generation(self) -> "Board":
+        if self._cache_next is None:
+            self.calculate_next_generation()
+        return self._cache_next
 
     def reset(self):
         self.live_cells.clear()
 
     def add_cell(self, x: int, y: int):
         self.live_cells.add((x, y))
+        self.clear_cache()
 
     def kill_cell(self, x: int, y: int):
         if self.is_alive(x, y):
             self.live_cells.remove((x, y))
+            self.clear_cache()
 
     def switch_cell(self, x: int, y: int):
         if self.is_alive(x, y):
@@ -65,16 +64,6 @@ class Board:
             return False
         return self.is_alive(x, y)
 
-    def next_generation(self) -> "Board":
-        candidates = set(self.live_cells)
-        for x, y in self.live_cells:
-            candidates.update(self.get_neighbors(x, y))
-        board = Board()
-        for x, y in candidates:
-            if self.will_survive(x, y):
-                board.add_cell(x, y)
-        return board
-
     def live_neighbors_count(self, x: int, y: int) -> int:
         return len(
             [
@@ -83,6 +72,37 @@ class Board:
                 if self.is_alive(*neighbor)
             ]
         )
+
+    def calculate_next_generation(self):
+        candidates = set(self.live_cells)
+        for x, y in self.live_cells:
+            candidates.update(self.get_neighbors(x, y))
+        board = Board()
+        for x, y in candidates:
+            if self.will_survive(x, y):
+                board.add_cell(x, y)
+        self._cache_next = board
+
+    def calculate_score(self):
+        board = self
+        cells_count = []
+        for _ in range(MAX_GENERATIONS):
+            cells_count.append(len(board.live_cells))
+            board = board.next_generation
+
+        cells_count = np.array(cells_count)
+        cells_count = np.flip(cells_count)
+        weights = np.array(
+            [
+                np.power(GENERATION_WEIGHT_DECAY, i)
+                for i in range(MAX_GENERATIONS)
+            ]
+        )
+        self._cache_score = float(np.sum(cells_count * weights) / np.sum(weights))
+
+    def clear_cache(self):
+        self._cache_next = None
+        self._cache_score = None
 
     @classmethod
     def get_neighbors(cls, x: int, y: int) -> list[tuple[int, int]]:
