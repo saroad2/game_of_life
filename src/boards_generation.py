@@ -15,15 +15,20 @@ class BoardsGeneration:
     def __iter__(self):
         return iter(self.boards)
 
-    def next_generation(self) -> "BoardsGeneration":
+    def next_generation(self, mutation_chance: float = 0.0) -> "BoardsGeneration":
         boards = []
-        weights = np.array([board.score for board in self.boards])
-        weights /= np.sum(weights)
         for _ in range(len(self)):
-            index = np.random.choice(len(self), p=weights)
-            board = self.boards[index]
-            boards.append(board.copy())
+            board = self.pick()
+            if np.random.uniform(0, 1) < mutation_chance:
+                board = board.next_generation
+            boards.append(board)
         return BoardsGeneration(boards)
+
+    def pick(self):
+        weights = np.array(self.scores)
+        weights /= np.sum(weights)
+        index = np.random.choice(len(self), p=weights)
+        return self.boards[index].copy()
 
     @classmethod
     def build(cls, n: int, boards_num: int) -> "BoardsGeneration":
