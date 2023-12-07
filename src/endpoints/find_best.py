@@ -9,7 +9,10 @@ if __name__ == '__main__':
         board.calculate_score()
     print("Ready!")
     for i in range(1, 101):
-        boards_generation = boards_generation.next_generation(mutation_chance=0.1)
+        boards_generation = boards_generation.next_generation(
+            mutation_chance=0.1,
+            crossover_chance=0.2,
+        )
         print(
             f"{i}) "
             f"Mean score={boards_generation.mean_score:.2f}, "

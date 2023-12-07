@@ -15,20 +15,51 @@ class BoardsGeneration:
     def __iter__(self):
         return iter(self.boards)
 
-    def next_generation(self, mutation_chance: float = 0.0) -> "BoardsGeneration":
+    def next_generation(
+        self,
+        mutation_chance: float,
+        crossover_chance: float,
+    ) -> "BoardsGeneration":
         boards = []
         for _ in range(len(self)):
-            board = self.pick()
-            if np.random.uniform(0, 1) < mutation_chance:
-                board = board.next_generation
+            board = self.get_board(mutation_chance=mutation_chance, crossover_chance=crossover_chance)
             boards.append(board)
         return BoardsGeneration(boards)
+
+    def get_board(self, mutation_chance: float, crossover_chance: float) -> Board:
+        board = self.pick()
+        effect = np.random.uniform(0, 1)
+        if effect < mutation_chance:
+            return board.next_generation
+        effect -= mutation_chance
+        if effect < crossover_chance:
+            board2 = self.pick()
+            return self.crossover(board, board2)
+        return board
 
     def pick(self):
         weights = np.array(self.scores)
         weights /= np.sum(weights)
         index = np.random.choice(len(self), p=weights)
         return self.boards[index].copy()
+
+    @classmethod
+    def crossover(cls, board1: Board, board2: Board) -> Board:
+        new_board = Board()
+        candidates = set(board1.live_cells)
+        candidates.update(board2.live_cells)
+        for x, y in candidates:
+            if cls.survives_crossover(board1, board2, x, y):
+                new_board.add_cell(x, y)
+        return new_board
+
+    @classmethod
+    def survives_crossover(cls, board1: Board, board2: Board, x: int, y: int) -> bool:
+        if board1.is_alive(x, y) and board2.is_alive(x, y):
+            return True
+        if not board1.is_alive(x, y) and not board2.is_alive(x, y):
+            return False
+        return np.random.randint(2) == 1
 
     @classmethod
     def build(cls, n: int, boards_num: int) -> "BoardsGeneration":
