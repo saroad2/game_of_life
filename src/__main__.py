@@ -19,6 +19,11 @@ if __name__ == '__main__':
             if event.type == pygame.MOUSEBUTTONDOWN:
                 x, y = event.pos
                 board.switch_cell(x // BLOCK_SIZE, y // BLOCK_SIZE)
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    board = board.next_generation()
+                if event.key == pygame.K_r:
+                    board.reset()
         screen.fill(WHITE)
         for i in range(N):
             for j in range(N):
