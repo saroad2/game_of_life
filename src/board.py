@@ -1,9 +1,40 @@
 from dataclasses import dataclass, field
 
+import numpy as np
+
+from constants import MAX_GENERATIONS, GENERATION_WEIGHT_DECAY
+
 
 @dataclass
 class Board:
     live_cells: set[tuple[int, int]] = field(default_factory=set)
+
+    @classmethod
+    def random(cls, n: int) -> "Board":
+        board = Board()
+        for i in range(n):
+            for j in range(n):
+                if np.random.randint(2) == 1:
+                    board.add_cell(i, j)
+        return board
+
+    @property
+    def score(self) -> float:
+        board = self
+        cells_count = []
+        for _ in range(MAX_GENERATIONS):
+            cells_count.append(len(board.live_cells))
+            board = board.next_generation()
+
+        cells_count = np.array(cells_count)
+        cells_count = np.flip(cells_count)
+        weights = np.array(
+            [
+                np.power(GENERATION_WEIGHT_DECAY, i)
+                for i in range(MAX_GENERATIONS)
+            ]
+        )
+        return float(np.sum(cells_count * weights) / np.sum(weights))
 
     def reset(self):
         self.live_cells.clear()
