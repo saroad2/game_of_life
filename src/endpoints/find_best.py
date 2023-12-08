@@ -10,7 +10,7 @@ if __name__ == '__main__':
         board.calculate_score()
     print("Ready!")
     for i in range(1, 101):
-        boards_generation = boards_generation.next_generation(
+        boards_generation = boards_generation.build_next_generation(
             mutation_chance=0.1,
             crossover_chance=0.1,
         )

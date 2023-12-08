@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 
 import numpy as np
+import tqdm
 
 from board import Board
 
@@ -15,13 +16,13 @@ class BoardsGeneration:
     def __iter__(self):
         return iter(self.boards)
 
-    def next_generation(
+    def build_next_generation(
         self,
         mutation_chance: float,
         crossover_chance: float,
     ) -> "BoardsGeneration":
         boards = []
-        for _ in range(len(self)):
+        for _ in tqdm.trange(len(self)):
             board = self.get_board(mutation_chance=mutation_chance, crossover_chance=crossover_chance)
             boards.append(board)
         return BoardsGeneration(boards)
@@ -63,6 +64,7 @@ class BoardsGeneration:
         for x, y in candidates:
             if cls.survives_crossover(board1, board2, x, y):
                 new_board.add_cell(x, y)
+        new_board.calculate_score()
         return new_board.normalize()
 
     @classmethod
