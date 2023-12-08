@@ -46,7 +46,14 @@ class BoardsGeneration:
 
     @classmethod
     def mutate(cls, board: Board) -> Board:
-        return board.next_generation.normalize()
+        effect = np.random.randint(2)
+        if effect == 0:
+            return board.next_generation.normalize()
+        new_cells = {
+            (y, x)
+            for x, y in board.live_cells
+        }
+        return Board(new_cells).normalize()
 
     @classmethod
     def crossover(cls, board1: Board, board2: Board) -> Board:
