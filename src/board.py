@@ -58,12 +58,36 @@ class Board:
         min_y = np.min([y for _, y in self.live_cells])
         return self.move(-min_x, -min_y)
 
-    def flip_xy(self):
+    def flip_xy(self) -> "Board":
         new_cells = {
             (y, x)
             for x, y in self.live_cells
         }
         cache_next = None if self._cache_next is None else self._cache_next.flip_xy()
+        return Board(
+            new_cells,
+            _cache_next=cache_next,
+            _cache_score=self._cache_score
+        )
+
+    def mirror_x(self) -> "Board":
+        new_cells = {
+            (-x, y)
+            for x, y in self.live_cells
+        }
+        cache_next = None if self._cache_next is None else self._cache_next.mirror_x()
+        return Board(
+            new_cells,
+            _cache_next=cache_next,
+            _cache_score=self._cache_score
+        )
+
+    def mirror_y(self) -> "Board":
+        new_cells = {
+            (x, -y)
+            for x, y in self.live_cells
+        }
+        cache_next = None if self._cache_next is None else self._cache_next.mirror_y()
         return Board(
             new_cells,
             _cache_next=cache_next,

@@ -11,8 +11,8 @@ if __name__ == '__main__':
     print("Ready!")
     for i in range(1, 101):
         boards_generation = boards_generation.next_generation(
-            mutation_chance=0.03,
-            crossover_chance=0.07,
+            mutation_chance=0.1,
+            crossover_chance=0.1,
         )
         print(
             f"{i}) "
