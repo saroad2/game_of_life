@@ -49,11 +49,7 @@ class BoardsGeneration:
         effect = np.random.randint(2)
         if effect == 0:
             return board.next_generation.normalize()
-        new_cells = {
-            (y, x)
-            for x, y in board.live_cells
-        }
-        return Board(new_cells).normalize()
+        return board.flip_xy().normalize()
 
     @classmethod
     def crossover(cls, board1: Board, board2: Board) -> Board:
