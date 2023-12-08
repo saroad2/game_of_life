@@ -1,8 +1,10 @@
+import time
+
 import pygame
 
 from board import Board
 from colors import WHITE, BLACK
-from constants import SCREEN_SIZE, BLOCK_SIZE, N
+from constants import SCREEN_SIZE, BLOCK_SIZE, N, DELAY_SECONDS
 
 if __name__ == '__main__':
     pygame.init()
@@ -12,6 +14,8 @@ if __name__ == '__main__':
     board = Board()
 
     running = True
+    play = False
+    start_time = None
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -21,9 +25,16 @@ if __name__ == '__main__':
                 board.switch_cell(x // BLOCK_SIZE, y // BLOCK_SIZE)
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
-                    board = board.next_generation
+                    play = not play
                 if event.key == pygame.K_r:
                     board.reset()
+        if play:
+            now = time.time()
+            if start_time is None or now - start_time > DELAY_SECONDS:
+                start_time = now
+                board = board.next_generation
+        else:
+            start_time = None
         screen.fill(WHITE)
         for i in range(N):
             for j in range(N):
