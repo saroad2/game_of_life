@@ -1,17 +1,18 @@
 import tqdm
 
 from boards_generation import BoardsGeneration
+from constants import N
 
 if __name__ == '__main__':
-    boards_generation = BoardsGeneration.build(n=20, boards_num=100)
+    boards_generation = BoardsGeneration.build(n=N, boards_num=1_000)
     print("Warmup...")
     for board in tqdm.tqdm(boards_generation):
         board.calculate_score()
     print("Ready!")
     for i in range(1, 101):
         boards_generation = boards_generation.next_generation(
-            mutation_chance=0.1,
-            crossover_chance=0.2,
+            mutation_chance=0.03,
+            crossover_chance=0.07,
         )
         print(
             f"{i}) "
