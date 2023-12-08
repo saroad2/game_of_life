@@ -100,15 +100,8 @@ class Board:
 
         cells_count = np.array(cells_count)
 
-        weights = np.array(
-            [
-                np.power(GENERATION_WEIGHT_DECAY, i)
-                for i in range(MAX_GENERATIONS)
-            ]
-        )
-        weights /= np.sum(weights)
-        weights -= (0.5 / MAX_GENERATIONS)
-        weights = np.flip(weights)
+        weights = np.exp(np.linspace(-1, 1, num=MAX_GENERATIONS)) - 1
+        weights /= np.sum(np.fabs(weights))
 
         self._cache_score = float(np.sum(cells_count * weights))
 
