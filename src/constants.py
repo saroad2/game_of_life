@@ -1,3 +1,5 @@
+import numpy as np
+
 N = 25
 BLOCK_SIZE = 20
 SCREEN_SIZE = N * BLOCK_SIZE
@@ -6,3 +8,6 @@ DELAY_SECONDS = 0.25
 
 MAX_GENERATIONS = 100
 GENERATION_WEIGHT_DECAY = 0.9
+
+SCORE_WEIGHTS = np.exp(np.linspace(-1, 1, num=MAX_GENERATIONS)) - 1
+SCORE_WEIGHTS /= np.sum(np.fabs(SCORE_WEIGHTS))

@@ -3,7 +3,7 @@ from typing import Optional
 
 import numpy as np
 
-from constants import MAX_GENERATIONS, GENERATION_WEIGHT_DECAY
+from constants import MAX_GENERATIONS, GENERATION_WEIGHT_DECAY, SCORE_WEIGHTS
 
 
 @dataclass
@@ -117,10 +117,7 @@ class Board:
 
         cells_count = np.array(cells_count)
 
-        weights = np.exp(np.linspace(-1, 1, num=MAX_GENERATIONS)) - 1
-        weights /= np.sum(np.fabs(weights))
-
-        self._cache_score = float(np.sum(cells_count * weights))
+        self._cache_score = float(np.sum(cells_count * SCORE_WEIGHTS))
 
     def clear_cache(self):
         self._cache_next = None
