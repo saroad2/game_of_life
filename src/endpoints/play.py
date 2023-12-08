@@ -28,6 +28,8 @@ if __name__ == '__main__':
                     play = not play
                 if event.key == pygame.K_r:
                     board.reset()
+                if event.key == pygame.K_g:
+                    board = Board.random(N)
         if play:
             now = time.time()
             if start_time is None or now - start_time > DELAY_SECONDS:
