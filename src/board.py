@@ -41,6 +41,15 @@ class Board:
             _cache_score=self._cache_score
         )
 
+    def normalize(self) -> "Board":
+        min_x = np.min([x for x, _ in self.live_cells])
+        min_y = np.min([y for _, y in self.live_cells])
+        new_cells = {
+            (x - min_x, y - min_y)
+            for x, y in self.live_cells
+        }
+        return Board(new_cells)
+
     def reset(self):
         self.live_cells.clear()
 

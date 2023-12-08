@@ -30,7 +30,7 @@ class BoardsGeneration:
         board = self.pick()
         effect = np.random.uniform(0, 1)
         if effect < mutation_chance:
-            return board.next_generation
+            return self.mutate(board)
         effect -= mutation_chance
         if effect < crossover_chance:
             board2 = self.pick()
@@ -45,6 +45,10 @@ class BoardsGeneration:
         return self.boards[index].copy()
 
     @classmethod
+    def mutate(cls, board: Board) -> Board:
+        return board.next_generation.normalize()
+
+    @classmethod
     def crossover(cls, board1: Board, board2: Board) -> Board:
         new_board = Board()
         candidates = set(board1.live_cells)
@@ -52,7 +56,7 @@ class BoardsGeneration:
         for x, y in candidates:
             if cls.survives_crossover(board1, board2, x, y):
                 new_board.add_cell(x, y)
-        return new_board
+        return new_board.normalize()
 
     @classmethod
     def survives_crossover(cls, board1: Board, board2: Board, x: int, y: int) -> bool:
@@ -66,7 +70,7 @@ class BoardsGeneration:
     def build(cls, n: int, boards_num: int) -> "BoardsGeneration":
         return BoardsGeneration(
             [
-                Board.random(n)
+                Board.random(n).normalize()
                 for _ in range(boards_num)
             ]
         )
