@@ -41,14 +41,22 @@ class Board:
             _cache_score=self._cache_score
         )
 
+    def move(self, dx: int, dy: int) -> "Board":
+        new_cells = {
+            (x + dx, y + dy)
+            for x, y in self.live_cells
+        }
+        cache_next = None if self._cache_next is None else self._cache_next.move(dx, dy)
+        return Board(
+            new_cells,
+            _cache_next=cache_next,
+            _cache_score=self._cache_score
+        )
+
     def normalize(self) -> "Board":
         min_x = np.min([x for x, _ in self.live_cells])
         min_y = np.min([y for _, y in self.live_cells])
-        new_cells = {
-            (x - min_x, y - min_y)
-            for x, y in self.live_cells
-        }
-        return Board(new_cells)
+        return self.move(-min_x, -min_y)
 
     def reset(self):
         self.live_cells.clear()
