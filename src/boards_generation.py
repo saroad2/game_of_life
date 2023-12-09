@@ -50,14 +50,13 @@ class BoardsGeneration:
 
     @classmethod
     def mutate(cls, board: Board) -> Board:
-        effect = np.random.randint(4)
-        if effect == 0:
-            return board.flip_xy().normalize()
-        if effect == 1:
-            return board.mirror_x().normalize()
-        if effect == 2:
-            return board.mirror_y().normalize()
-        return board.next_generation.normalize()
+        _, _, max_x, max_y = board.box
+        new_board = board.copy()
+        i = np.random.choice(max_x + 1)
+        j = np.random.choice(max_y + 1)
+        new_board.switch_cell(i, j)
+        new_board.calculate_score()
+        return new_board.normalize()
 
     @classmethod
     def crossover(cls, board1: Board, board2: Board) -> Board:

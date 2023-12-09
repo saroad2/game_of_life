@@ -3,7 +3,7 @@ from typing import Optional
 
 import numpy as np
 
-from constants import MAX_GENERATIONS, GENERATION_WEIGHT_DECAY, SCORE_WEIGHTS
+from constants import MAX_GENERATIONS, SCORE_WEIGHTS
 
 
 @dataclass
@@ -33,6 +33,15 @@ class Board:
             self.calculate_next_generation()
         return self._cache_next
 
+    @property
+    def box(self) -> tuple[int, int, int, int]:
+        x_values = [x for x, _ in self.live_cells]
+        y_values = [y for _, y in self.live_cells]
+
+        min_x, max_x = np.min(x_values), np.max(x_values)
+        min_y, max_y = np.min(y_values), np.max(y_values)
+        return min_x, min_y, max_x, max_y
+
     def copy(self) -> "Board":
         cache_next = None if self._cache_next is None else self._cache_next.copy()
         return Board(
@@ -54,8 +63,7 @@ class Board:
         )
 
     def normalize(self) -> "Board":
-        min_x = np.min([x for x, _ in self.live_cells])
-        min_y = np.min([y for _, y in self.live_cells])
+        min_x, min_y, _, _ = self.box
         return self.move(-min_x, -min_y)
 
     def flip_xy(self) -> "Board":

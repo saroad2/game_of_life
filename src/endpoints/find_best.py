@@ -12,8 +12,8 @@ if __name__ == '__main__':
     print("Ready!")
     for i in range(1, EPOCHS + 1):
         boards_generation, offspring_types_dict = boards_generation.build_next_generation(
-            crossover_chance=0.03,
-            mutation_chance=0.02,
+            crossover_chance=0.06,
+            mutation_chance=0.04,
         )
         print(
             f"{i}) "
