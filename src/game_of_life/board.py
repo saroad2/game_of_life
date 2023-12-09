@@ -1,4 +1,6 @@
+import json
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Optional
 
 import numpy as np
@@ -166,6 +168,16 @@ class Board:
     def clear_cache(self):
         self._cache_next = None
         self._cache_score = None
+
+    def export(self, path: Path):
+        obj = dict(
+            live_cells=[
+                (int(x), int(y))
+                for x, y in self.live_cells
+            ]
+        )
+        with open(path, "w") as fd:
+            json.dump(obj, fd, indent=1)
 
     @classmethod
     def get_neighbors(cls, x: int, y: int) -> list[tuple[int, int]]:

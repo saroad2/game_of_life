@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import tqdm
 
 from game_of_life.boards_generation import BoardsGeneration
@@ -25,3 +27,4 @@ if __name__ == '__main__':
             f"Mean score={boards_generation.mean_score:.2f}, "
             f"Best score={boards_generation.best_score:.2f}"
         )
+    boards_generation.best_board.export(Path.cwd() / "best_board.json")

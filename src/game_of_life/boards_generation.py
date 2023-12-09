@@ -109,5 +109,10 @@ class BoardsGeneration:
         return np.max(self.scores)
 
     @property
+    def best_board(self) -> Board:
+        index = np.argmax(self.scores)
+        return self.boards[index]
+
+    @property
     def scores(self) -> list[float]:
         return [board.score for board in self.boards]
