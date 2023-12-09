@@ -1,4 +1,5 @@
 import time
+from pathlib import Path
 
 import pygame
 
@@ -11,7 +12,11 @@ if __name__ == '__main__':
 
     screen = pygame.display.set_mode([SCREEN_SIZE, SCREEN_SIZE])
 
-    board = Board()
+    SAVED_BOARD_FILE = Path.cwd() / 'best_board.json'
+    if SAVED_BOARD_FILE.exists():
+        board = Board.from_path(SAVED_BOARD_FILE)
+    else:
+        board = Board()
 
     running = True
     play = False

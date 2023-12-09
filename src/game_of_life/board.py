@@ -23,6 +23,15 @@ class Board:
                     board.add_cell(i, j)
         return board
 
+    @classmethod
+    def from_path(cls, path: Path) -> "Board":
+        board = Board()
+        with open(path, "r") as fd:
+            data = json.load(fd)
+        for x, y in data["live_cells"]:
+            board.add_cell(x, y)
+        return board
+
     @property
     def score(self) -> float:
         if self._cache_score is None:
