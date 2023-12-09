@@ -4,13 +4,13 @@ import numpy as np
 import tqdm
 
 from game_of_life.board import Board
-from game_of_life.constants import N
 from game_of_life.offspring_type import OffspringType
 
 
 @dataclass()
 class BoardsGeneration:
     boards: list[Board]
+    n: int
 
     def __len__(self):
         return len(self.boards)
@@ -34,7 +34,7 @@ class BoardsGeneration:
             )
             types_dict[offspring_type] += 1
             boards.append(board)
-        return BoardsGeneration(boards), types_dict
+        return BoardsGeneration(boards=boards, n=self.n), types_dict
 
     def get_board(
         self,
@@ -44,7 +44,7 @@ class BoardsGeneration:
     ) -> tuple[Board, OffspringType]:
         effect = np.random.uniform(0, 1)
         if effect < random_chance:
-            return Board.random(N), OffspringType.RANDOM
+            return Board.random(self.n), OffspringType.RANDOM
         effect -= random_chance
         board = self.pick()
         if effect < mutation_chance:
@@ -94,10 +94,11 @@ class BoardsGeneration:
     @classmethod
     def build(cls, n: int, boards_num: int) -> "BoardsGeneration":
         return BoardsGeneration(
-            [
+            boards=[
                 Board.random(n).normalize()
                 for _ in range(boards_num)
-            ]
+            ],
+            n=n,
         )
 
     @property

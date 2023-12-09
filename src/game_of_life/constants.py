@@ -1,7 +1,7 @@
 import numpy as np
 
-N = 25
-BLOCK_SIZE = 20
+N = 50
+BLOCK_SIZE = 15
 SCREEN_SIZE = N * BLOCK_SIZE
 EPOCHS = 200
 

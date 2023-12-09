@@ -14,7 +14,7 @@ if __name__ == '__main__':
 
     SAVED_BOARD_FILE = Path.cwd() / 'best_board.json'
     if SAVED_BOARD_FILE.exists():
-        board = Board.from_path(SAVED_BOARD_FILE)
+        board = Board.from_path(SAVED_BOARD_FILE).move(N // 2, N // 2)
     else:
         board = Board()
 

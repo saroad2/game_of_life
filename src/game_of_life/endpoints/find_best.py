@@ -3,11 +3,11 @@ from pathlib import Path
 import tqdm
 
 from game_of_life.boards_generation import BoardsGeneration
-from game_of_life.constants import N, EPOCHS
+from game_of_life.constants import EPOCHS
 from game_of_life.offspring_type import OffspringType
 
 if __name__ == '__main__':
-    boards_generation = BoardsGeneration.build(n=N, boards_num=1_000)
+    boards_generation = BoardsGeneration.build(n=10, boards_num=1_000)
     print("Warmup...")
     for board in tqdm.tqdm(boards_generation):
         board.calculate_score()
