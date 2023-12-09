@@ -5,3 +5,4 @@ class OffspringType(Enum):
     PICK = 0
     MUTATE = 1
     CROSSOVER = 2
+    RANDOM = 3

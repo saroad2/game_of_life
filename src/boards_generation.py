@@ -4,6 +4,7 @@ import numpy as np
 import tqdm
 
 from board import Board
+from constants import N
 from offspring_type import OffspringType
 
 
@@ -21,18 +22,31 @@ class BoardsGeneration:
         self,
         mutation_chance: float,
         crossover_chance: float,
+        random_chance: float,
     ) -> tuple["BoardsGeneration", dict[OffspringType, int]]:
         boards = []
-        types_dict = {OffspringType.PICK: 0, OffspringType.CROSSOVER: 0, OffspringType.MUTATE: 0}
+        types_dict = dict.fromkeys(OffspringType, 0)
         for _ in tqdm.trange(len(self)):
-            board, offspring_type = self.get_board(mutation_chance=mutation_chance, crossover_chance=crossover_chance)
+            board, offspring_type = self.get_board(
+                mutation_chance=mutation_chance,
+                crossover_chance=crossover_chance,
+                random_chance=random_chance,
+            )
             types_dict[offspring_type] += 1
             boards.append(board)
         return BoardsGeneration(boards), types_dict
 
-    def get_board(self, mutation_chance: float, crossover_chance: float) -> tuple[Board, OffspringType]:
-        board = self.pick()
+    def get_board(
+        self,
+        mutation_chance: float,
+        crossover_chance: float,
+        random_chance: float,
+    ) -> tuple[Board, OffspringType]:
         effect = np.random.uniform(0, 1)
+        if effect < random_chance:
+            return Board.random(N), OffspringType.RANDOM
+        effect -= random_chance
+        board = self.pick()
         if effect < mutation_chance:
             return self.mutate(board), OffspringType.MUTATE
         effect -= mutation_chance

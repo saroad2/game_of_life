@@ -13,13 +13,15 @@ if __name__ == '__main__':
     for i in range(1, EPOCHS + 1):
         boards_generation, offspring_types_dict = boards_generation.build_next_generation(
             crossover_chance=0.06,
-            mutation_chance=0.04,
+            mutation_chance=0.03,
+            random_chance=0.01,
         )
         print(
             f"{i}) "
             f"P: {offspring_types_dict[OffspringType.PICK]}, "
             f"C: {offspring_types_dict[OffspringType.CROSSOVER]}, "
             f"M: {offspring_types_dict[OffspringType.MUTATE]}, "
+            f"R: {offspring_types_dict[OffspringType.RANDOM]}, "
             f"Mean score={boards_generation.mean_score:.2f}, "
             f"Best score={boards_generation.best_score:.2f}"
         )
