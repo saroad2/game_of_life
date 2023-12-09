@@ -3,6 +3,7 @@ import numpy as np
 N = 25
 BLOCK_SIZE = 20
 SCREEN_SIZE = N * BLOCK_SIZE
+EPOCHS = 200
 
 DELAY_SECONDS = 0.25
 
