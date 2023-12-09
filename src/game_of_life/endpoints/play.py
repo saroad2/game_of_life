@@ -2,9 +2,9 @@ import time
 
 import pygame
 
-from board import Board
-from colors import WHITE, BLACK
-from constants import SCREEN_SIZE, BLOCK_SIZE, N, DELAY_SECONDS
+from game_of_life.board import Board
+from game_of_life.colors import WHITE, BLACK
+from game_of_life.constants import SCREEN_SIZE, BLOCK_SIZE, N, DELAY_SECONDS
 
 if __name__ == '__main__':
     pygame.init()

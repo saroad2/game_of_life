@@ -1,8 +1,8 @@
 import tqdm
 
-from boards_generation import BoardsGeneration
-from constants import N, EPOCHS
-from offspring_type import OffspringType
+from game_of_life.boards_generation import BoardsGeneration
+from game_of_life.constants import N, EPOCHS
+from game_of_life.offspring_type import OffspringType
 
 if __name__ == '__main__':
     boards_generation = BoardsGeneration.build(n=N, boards_num=1_000)

@@ -3,9 +3,9 @@ from dataclasses import dataclass
 import numpy as np
 import tqdm
 
-from board import Board
-from constants import N
-from offspring_type import OffspringType
+from game_of_life.board import Board
+from game_of_life.constants import N
+from game_of_life.offspring_type import OffspringType
 
 
 @dataclass()

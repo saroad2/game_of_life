@@ -3,7 +3,7 @@ from typing import Optional
 
 import numpy as np
 
-from constants import MAX_GENERATIONS, SCORE_WEIGHTS
+from game_of_life.constants import MAX_GENERATIONS, SCORE_WEIGHTS
 
 
 @dataclass
